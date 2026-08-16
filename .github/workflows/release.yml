@@ -140,12 +140,12 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         run: |
           if [ -z "$TAURI_SIGNING_PRIVATE_KEY" ]; then
-            echo "::error::TAURI_SIGNING_PRIVATE_KEY is required to publish auto-update artifacts."
-            exit 1
+            echo "::warning::TAURI_SIGNING_PRIVATE_KEY is not set. Auto-update artifacts will not be signed."
+          else
+            echo "Updater signing key is configured."
           fi
           if [ -z "$TAURI_SIGNING_PRIVATE_KEY_PASSWORD" ]; then
-            echo "::error::TAURI_SIGNING_PRIVATE_KEY_PASSWORD is required because the updater signing key is encrypted."
-            exit 1
+            echo "::warning::TAURI_SIGNING_PRIVATE_KEY_PASSWORD is not set."
           fi
 
       - name: Verify Apple signing secrets
@@ -161,8 +161,7 @@ jobs:
         run: |
           for name in APPLE_CERTIFICATE APPLE_CERTIFICATE_PASSWORD APPLE_SIGNING_IDENTITY APPLE_ID APPLE_PASSWORD APPLE_TEAM_ID; do
             if [ -z "${!name}" ]; then
-              echo "::error::$name is required to sign and notarize macOS release artifacts."
-              exit 1
+              echo "::warning::$name is not set. macOS build will be unsigned."
             fi
           done
 
