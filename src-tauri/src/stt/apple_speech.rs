@@ -201,8 +201,21 @@ mod platform {
 
     pub fn apple_speech_availability(language: Option<&str>) -> AppleSpeechAvailability {
         let locale = apple_locale_for_language(language);
-        let authorization_status =
-            current_authorization_status().unwrap_or(AppleSpeechAuthorizationStatus::Unknown);
+        let authorization_status = match current_authorization_status() {
+            Ok(status) => status,
+            Err(_) => AppleSpeechAuthorizationStatus::Unknown,
+        };
+
+        // NotDetermined: proactively request authorization so the user sees the
+        // system permission dialog and the app appears in System Settings.
+        let authorization_status = if authorization_status
+            == AppleSpeechAuthorizationStatus::NotDetermined
+        {
+            request_authorization_blocking().unwrap_or(AppleSpeechAuthorizationStatus::Unknown)
+        } else {
+            authorization_status
+        };
+
         let recognizer_available =
             if authorization_status == AppleSpeechAuthorizationStatus::Authorized {
                 recognizer_available(locale.as_deref()).ok()

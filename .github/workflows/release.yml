@@ -103,11 +103,11 @@ jobs:
           GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         run: |
           if [ -z "$GH_TOKEN" ]; then
-            echo "::error::RELEASE_TOKEN is required to publish releases to tover0314-w/opentypeless."
+            echo "::error::RELEASE_TOKEN is required to publish releases to JoyifyX/opentypeless."
             exit 1
           fi
 
-          gh api repos/tover0314-w/opentypeless >/dev/null
+          gh api repos/JoyifyX/opentypeless >/dev/null
 
       - uses: actions/setup-node@v4
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.platform == 'all' || github.event.inputs.platform == matrix.platform_group }}
@@ -209,7 +209,7 @@ jobs:
           WINDOWS_CERTIFICATE_THUMBPRINT: ${{ env.WINDOWS_CERTIFICATE_THUMBPRINT }}
           WINDOWS_TIMESTAMP_URL: ${{ env.WINDOWS_TIMESTAMP_URL }}
         with:
-          owner: tover0314-w
+          owner: JoyifyX
           repo: opentypeless
           releaseCommitish: main
           tagName: ${{ github.event.inputs.tag || github.ref_name }}

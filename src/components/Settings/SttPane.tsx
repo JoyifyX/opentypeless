@@ -74,7 +74,7 @@ export function SttPane() {
   const appleSpeechReady = sttDiagnostics?.ready === true
   const appleSpeechUnavailable = sttDiagnostics?.ready === false
   const canTest = isAppleSpeech
-    ? appleSpeechReady
+    ? sttDiagnostics !== null  // allow clicking once we have a diagnostic result
     : isCustomWhisper
       ? Boolean(config.stt_custom_base_url.trim() && config.stt_custom_model.trim())
       : Boolean(apiKeyDraft)
